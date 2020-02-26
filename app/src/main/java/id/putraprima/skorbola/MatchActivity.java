@@ -12,24 +12,28 @@ import static id.putraprima.skorbola.MainActivity.HOMENAME_KEY;
 
 public class MatchActivity extends AppCompatActivity {
 
-    private TextView homeTim, awayTim, angkaHome, angkaAway;
-    private int nilaiHome=0, nilaiAway=0;
+    private static final String HASIL_KEY = "results";
+    private TextView namaHome;
+    private TextView namaAway;
+    private TextView scoreHome;
+    private TextView scoreAway;
+    private int hasilHome=0, hasilAway=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match);
 
-        homeTim = findViewById(R.id.txt_home);
-        awayTim = findViewById(R.id.txt_away);
-        angkaHome = findViewById(R.id.score_home);
-        angkaAway = findViewById(R.id.score_away);
+        namaHome = findViewById(R.id.txt_home);
+        namaAway = findViewById(R.id.txt_away);
+        scoreHome = findViewById(R.id.score_home);
+        scoreAway = findViewById(R.id.score_away);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             // TODO: display value here
-            homeTim.setText(extras.getString(HOMENAME_KEY));
-            awayTim.setText(extras.getString(AWAYNAME_KEY));
+            namaHome.setText(extras.getString("homename"));
+            namaAway.setText(extras.getString("awayname"));
         }
 
         //TODO
@@ -38,32 +42,29 @@ public class MatchActivity extends AppCompatActivity {
         //3.Tombol Cek Result menghitung pemenang dari kedua tim dan mengirim nama pemenang ke ResultActivity, jika seri di kirim text "Draw"
     }
 
-    public void handleCek(View view) {
-        String score;
-
-        Intent intent =  new Intent(this, ResultActivity.class);
-
-        if(nilaiHome > nilaiAway){
-            score = angkaHome.getText().toString() + " Is Winner";
-        }else if(nilaiHome < nilaiAway) {
-            score = angkaAway.getText().toString() + " Is Winner";
-        }
-        else{
-            score = " Is Draw";
-        }
-        startActivity(intent);
-    }
-
     public void handleHomeScore(View view) {
-        nilaiHome++;
-        angkaHome.setText(String.valueOf(nilaiHome));
-
+        hasilHome++;
+        scoreHome.setText(String.valueOf(hasilHome));
     }
 
     public void handleAwayScore(View view) {
-        nilaiAway++;
-        angkaAway.setText(String.valueOf(nilaiAway));
+        hasilAway++;
+        scoreAway.setText(String.valueOf(hasilAway));
     }
 
+    public void handleCek(View view) {
+        String hasilTanding;
+        Intent intent =  new Intent(this, ResultActivity.class);
 
+        if(hasilHome > hasilAway){
+            hasilTanding = namaHome.getText().toString() + " Menang, Congratulations !";
+        }else if(hasilHome < hasilAway) {
+            hasilTanding = namaAway.getText().toString() + " Menang, Congratulations !";
+        }
+        else{
+            hasilTanding = "Pertandingan Seri";
+        }
+        intent.putExtra(HASIL_KEY, hasilTanding);
+        startActivity(intent);
+    }
 }
